@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: falco
+  labels:
+    app: falco
+spec:
+  selector:
+    matchLabels:
+      app: falco
+  template:
+    metadata:
+      labels:
+        app: falco
+    spec:
+      hostPID: true
+      hostIPC: true
+      hostNetwork: true
+      containers:
+      - name: falco
+        image: falcosecurity/falco
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - name: dev
+          mountPath: /host/dev
+        - name: etc
+          mountPath: /host/etc
+        - name: lib
+          mountPath: /host/lib
+        - name: proc
+          mountPath: /host/proc
+        - name: usr
+          mountPath: /host/usr
+        - name: var
+          mountPath: /host/var
+        env:
+        - name: HOST_ROOT
+          value: /host
+      volumes:
+      - name: dev
+        hostPath:
+          path: /dev
+      - name: etc
+        hostPath:
+          path: /etc
+      - name: lib
+        hostPath:
+          path: /lib
+      - name: proc
+        hostPath:
+          path: /proc
+      - name: usr
+        hostPath:
+          path: /usr
+      - name: var
+        hostPath:
+          path: /var
