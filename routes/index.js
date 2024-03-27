@@ -29,4 +29,26 @@ Routes.get("/data", async (req, res) => {
   }
 });
 
+Routes.post("/persist", async (req, res) => {
+  try {
+    const jsonData = req.body;
+    const serializedJson = JSON.stringify(jsonData);
+
+    const query = "INSERT INTO user (json_data_column) VALUES (?)";
+
+    connection.query(query, [serializedJson], (error, results) => {
+      if (error) {
+        console.error("Error persisting JSON data:", error);
+        res.status(500).send("Error persisting JSON data");
+        return;
+      }
+      console.log("JSON data persisted successfully:", results);
+      res.status(200).send("JSON data persisted successfully");
+    });
+  } catch (error) {
+    console.error("Error handling request:", error);
+    res.status(500).send("Internal server error");
+  }
+});
+
 module.exports = Routes;
