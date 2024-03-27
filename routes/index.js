@@ -2,6 +2,7 @@ const { Router } = require("express");
 const Routes = Router();
 
 Routes.get("/", (req, res) => {
+  console.log("GG");
   return res.json({
     message: "Hello World",
   });
