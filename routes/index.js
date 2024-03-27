@@ -2,7 +2,6 @@ const { Router } = require("express");
 const Routes = Router();
 
 Routes.get("/", (req, res) => {
-  console.log("GG");
   return res.json({
     message: "Hello World",
   });
@@ -11,7 +10,7 @@ Routes.get("/", (req, res) => {
 Routes.get("/data", async (req, res) => {
   try {
     // Chemin vers le fichier JSON
-    const filePath = path.join(__dirname, "data.json");
+    const filePath = path.join("data.json");
 
     // Lecture du fichier JSON
     const jsonData = await fs.readFile(filePath, "utf-8");
@@ -48,6 +47,18 @@ Routes.post("/persist", async (req, res) => {
   } catch (error) {
     console.error("Error handling request:", error);
     res.status(500).send("Internal server error");
+  }
+});
+
+Routes.post("/push_json", (req, res) => {
+  try {
+      // Récupération du JSON envoyé par l'utilisateur
+      const data = fs.readFile("data.json", "utf-8");
+
+      // Traitement du JSON (ici, nous le renvoyons simplement en réponse)
+      res.status(200).json({ message: 'JSON reçu avec succès', data });
+  } catch (error) {
+      res.status(400).json({ message: 'Erreur lors du traitement du JSON', error: error.message });
   }
 });
 
